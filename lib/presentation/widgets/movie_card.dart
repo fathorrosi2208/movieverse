@@ -33,7 +33,7 @@ class MovieCard extends StatelessWidget {
               },
               child: SizedBox(
                 width: 190,
-                height: 350,
+                height: 370,
                 child: Stack(
                   children: [
                     Column(

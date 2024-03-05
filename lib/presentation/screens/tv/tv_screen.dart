@@ -53,7 +53,7 @@ class _TvScreenState extends State<TvScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<AiringTodayTvBloc, AiringTodayTvState>(
                   builder: (_, state) {
                 if (state is AiringTodayTvLoading) {
@@ -79,7 +79,7 @@ class _TvScreenState extends State<TvScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<PopularTvBloc, PopularTvState>(
                   builder: (_, state) {
                 if (state is PopularTvLoading) {
@@ -105,7 +105,7 @@ class _TvScreenState extends State<TvScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<TopRatedTvBloc, TopRatedTvState>(
                   builder: (_, state) {
                 if (state is TopRatedTvLoading) {
@@ -131,7 +131,7 @@ class _TvScreenState extends State<TvScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<OnTheAirTvBloc, OnTheAirTvState>(
                   builder: (_, state) {
                 if (state is OnTheAirTvLoading) {

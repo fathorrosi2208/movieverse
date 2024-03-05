@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:155490193690:android:9ae82fcd1805f8bcf51ca3",
+        "mobilesdk_app_id": "1:155490193690:android:74ccfea24246f73af51ca3",
         "android_client_info": {
-          "package_name": "com.example.movieverse"
+          "package_name": "com.fathorrosi.movieverse"
         }
       },
       "oauth_client": [

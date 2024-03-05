@@ -53,7 +53,7 @@ class _MovieScreenState extends State<MovieScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<NowPlayingMoviesBloc, NowPlayingMoviesState>(
                   builder: (_, state) {
                 if (state is NowPlayingMoviesLoading) {
@@ -79,7 +79,7 @@ class _MovieScreenState extends State<MovieScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<PopularMoviesBloc, PopularMoviesState>(
                   builder: (_, state) {
                 if (state is PopularMoviesLoading) {
@@ -105,7 +105,7 @@ class _MovieScreenState extends State<MovieScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<TopRatedMoviesBloc, TopRatedMoviesState>(
                   builder: (_, state) {
                 if (state is TopRatedMoviesLoading) {
@@ -131,7 +131,7 @@ class _MovieScreenState extends State<MovieScreen> {
             ),
             Gap($styles.insets.xs),
             SizedBox(
-              height: 350,
+              height: 370,
               child: BlocBuilder<UpcomingMoviesBloc, UpcomingMoviesState>(
                   builder: (_, state) {
                 if (state is UpcomingMoviesLoading) {

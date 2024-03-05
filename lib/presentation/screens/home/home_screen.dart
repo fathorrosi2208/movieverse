@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Gap($styles.insets.xs),
                 SizedBox(
                   width: double.infinity,
-                  height: 350,
+                  height: 370,
                   child: TabBarView(
                     controller: _tabController,
                     children: [
@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Gap($styles.insets.xs),
                 SizedBox(
                   width: double.infinity,
-                  height: 350,
+                  height: 370,
                   child: TabBarView(
                     controller: _thirdTabController,
                     children: [
@@ -315,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Gap($styles.insets.xs),
                 SizedBox(
                   width: double.infinity,
-                  height: 350,
+                  height: 370,
                   child: TabBarView(
                     controller: _secondTabController,
                     children: [
