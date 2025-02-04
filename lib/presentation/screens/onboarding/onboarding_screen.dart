@@ -72,7 +72,7 @@ class OnboardingScreen extends StatelessWidget {
                               context.pushReplacement('/loginScreen');
                             },
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
+                              backgroundColor: WidgetStateProperty.all<Color>(
                                 $styles.theme.tertiaryColor,
                               ),
                             ),

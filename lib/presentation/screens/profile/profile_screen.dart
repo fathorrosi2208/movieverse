@@ -15,8 +15,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        BlocProvider.of<GetUserDataBloc>(context)..add(GetUserDataRequested()));
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<GetUserDataBloc>(context).add(GetUserDataRequested());
   }
 
   @override

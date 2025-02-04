@@ -17,9 +17,13 @@ class _TvDetailScreenState extends State<TvDetailScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      BlocProvider.of<TvDetailsBloc>(context).add(FetchTvDetails(widget.id));
-    });
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<TvDetailsBloc>(context).add(FetchTvDetails(widget.id));
   }
 
   @override

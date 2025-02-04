@@ -247,7 +247,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   }
                                 : null,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll<Color>(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
                                 isButtonEnabled
                                     ? $styles.theme.tertiaryColor
                                     : $styles.theme.neutralColor,

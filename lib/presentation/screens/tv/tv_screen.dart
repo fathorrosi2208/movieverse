@@ -19,14 +19,16 @@ class _TvScreenState extends State<TvScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        BlocProvider.of<AiringTodayTvBloc>(context)..add(FetchAiringTodayTv()));
-    Future.microtask(
-        () => BlocProvider.of<OnTheAirTvBloc>(context)..add(FetchOnTheAirTv()));
-    Future.microtask(
-        () => BlocProvider.of<PopularTvBloc>(context)..add(FetchPopularTv()));
-    Future.microtask(
-        () => BlocProvider.of<TopRatedTvBloc>(context)..add(FetchTopRatedTv()));
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<AiringTodayTvBloc>(context).add(FetchAiringTodayTv());
+    BlocProvider.of<OnTheAirTvBloc>(context).add(FetchOnTheAirTv());
+    BlocProvider.of<PopularTvBloc>(context).add(FetchPopularTv());
+    BlocProvider.of<TopRatedTvBloc>(context).add(FetchTopRatedTv());
   }
 
   @override

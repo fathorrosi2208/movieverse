@@ -3,6 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:movieverse/main.dart';
 
+/// Ekstensi untuk mengonversi [Color] ke nilai ARGB (int)
+extension ColorToArgb on Color {
+  int toArgb() =>
+      ((a.toInt() << 24) | (r.toInt() << 16) | (g.toInt() << 8) | b.toInt());
+}
+
+/// Tema aplikasi menggunakan DynamicScheme dari material_color_utilities.
 @immutable
 class AppTheme extends ThemeExtension<AppTheme> {
   const AppTheme({
@@ -29,7 +36,8 @@ class AppTheme extends ThemeExtension<AppTheme> {
       );
 
   ThemeData toThemeData() {
-    final colorScheme = _scheme().toColorScheme(Brightness.light);
+    // Buat DynamicScheme dan konversikan ke ColorScheme.
+    final colorScheme = _dynamicScheme().toColorScheme(Brightness.light);
     return _base(colorScheme).copyWith(brightness: colorScheme.brightness);
   }
 
@@ -48,101 +56,84 @@ class AppTheme extends ThemeExtension<AppTheme> {
     TextTheme txtTheme = ThemeData.light().textTheme;
 
     return ThemeData(
-        useMaterial3: true,
-        extensions: [this],
-        colorScheme: colorScheme,
-        textSelectionTheme: TextSelectionThemeData(cursorColor: tertiaryColor),
-        scaffoldBackgroundColor: primaryColor,
-        navigationBarTheme: NavigationBarThemeData(
-          labelTextStyle: MaterialStateProperty.resolveWith<TextStyle?>(
-            (Set<MaterialState> states) {
-              // Return the appropriate TextStyle based on the state
-              if (states.contains(MaterialState.selected)) {
-                return $styles.text.labelSmall.copyWith(color: tertiaryColor);
-              } else {
-                return $styles.text.labelLarge.copyWith(color: Colors.grey);
-              }
-            },
-          ),
+      useMaterial3: true,
+      extensions: [this],
+      colorScheme: colorScheme,
+      textSelectionTheme: TextSelectionThemeData(cursorColor: tertiaryColor),
+      scaffoldBackgroundColor: primaryColor,
+      navigationBarTheme: NavigationBarThemeData(
+        labelTextStyle: WidgetStateProperty.resolveWith<TextStyle?>(
+          (Set<WidgetState> states) {
+            // Mengembalikan TextStyle yang sesuai dengan state widget
+            if (states.contains(WidgetState.selected)) {
+              return $styles.text.labelSmall.copyWith(color: tertiaryColor);
+            } else {
+              return $styles.text.labelLarge.copyWith(color: Colors.grey);
+            }
+          },
         ),
-        textTheme: txtTheme);
+      ),
+      textTheme: txtTheme,
+    );
   }
 
-  Scheme _scheme() {
-    final base = CorePalette.of(primaryColor.value);
-    final primary = base.primary;
-    final tertiary = CorePalette.of(tertiaryColor.value).primary;
-    final neutral = CorePalette.of(neutralColor.value).neutral;
+  /// Menghasilkan DynamicScheme berdasarkan warna–warna dasar.
+  DynamicScheme _dynamicScheme() {
+    // Dapatkan CorePalette dari masing–masing warna.
+    final primaryCore = CorePalette.of(primaryColor.toArgb());
+    final tertiaryCore = CorePalette.of(tertiaryColor.toArgb());
+    final neutralCore = CorePalette.of(neutralColor.toArgb());
 
-    return Scheme(
-        primary: primary.get(40),
-        onPrimary: primary.get(100),
-        primaryContainer: primary.get(90),
-        onPrimaryContainer: primary.get(10),
-        secondary: base.secondary.get(40),
-        onSecondary: base.secondary.get(100),
-        secondaryContainer: base.secondary.get(90),
-        onSecondaryContainer: base.secondary.get(10),
-        tertiary: tertiary.get(40),
-        onTertiary: tertiary.get(100),
-        tertiaryContainer: tertiary.get(90),
-        onTertiaryContainer: tertiary.get(10),
-        error: base.error.get(40),
-        onError: base.error.get(100),
-        errorContainer: base.error.get(90),
-        onErrorContainer: base.error.get(10),
-        background: neutral.get(99),
-        onBackground: neutral.get(10),
-        surface: neutral.get(99),
-        onSurface: neutral.get(10),
-        surfaceVariant: base.neutralVariant.get(90),
-        onSurfaceVariant: base.neutralVariant.get(30),
-        outline: base.neutralVariant.get(50),
-        outlineVariant: base.neutralVariant.get(80),
-        shadow: neutral.get(0),
-        scrim: neutral.get(0),
-        inverseSurface: neutral.get(20),
-        inverseOnSurface: neutral.get(95),
-        inversePrimary: neutral.get(80));
+    return DynamicScheme(
+      sourceColorArgb: primaryColor.toArgb(),
+      variant: Variant
+          .neutral, // Pastikan ejaannya benar ("standard", bukan "standart")
+      isDark: false,
+      primaryPalette: primaryCore.primary,
+      secondaryPalette: primaryCore.secondary,
+      tertiaryPalette: tertiaryCore.primary,
+      neutralPalette: neutralCore.neutral,
+      neutralVariantPalette: neutralCore.neutralVariant,
+      // contrastLevel menggunakan nilai default (0.0)
+    );
   }
 }
 
-extension on Scheme {
+/// Ekstensi untuk mengonversi DynamicScheme ke ColorScheme.
+extension DynamicSchemeExtension on DynamicScheme {
   ColorScheme toColorScheme(Brightness brightness) {
-    Color txtColor = Colors.white;
-
+    const Color txtColor = Colors.white;
     return ColorScheme(
-        primary: Color(primary),
-        onPrimary: Color(onPrimary),
-        primaryContainer: Color(primaryContainer),
-        onPrimaryContainer: Color(onPrimaryContainer),
-        secondary: Color(secondary),
-        onSecondary: Color(onSecondary),
-        secondaryContainer: Color(secondaryContainer),
-        onSecondaryContainer: Color(onSecondaryContainer),
-        tertiary: Color(tertiary),
-        onTertiary: Color(onTertiary),
-        tertiaryContainer: Color(tertiaryContainer),
-        onTertiaryContainer: Color(onTertiaryContainer),
-        error: Color(error),
-        onError: Color(onError),
-        errorContainer: Color(errorContainer),
-        onErrorContainer: Color(onErrorContainer),
-        outline: Color(outline),
-        outlineVariant: Color(outlineVariant),
-        background: Color(background),
-        onBackground: Color(onBackground),
-        surface: Color(surface),
-        onSurface: txtColor,
-        surfaceVariant: Color(surfaceVariant),
-        onSurfaceVariant: Color(onSurfaceVariant),
-        inverseSurface: Color(inverseSurface),
-        onInverseSurface: Color(inverseOnSurface),
-        inversePrimary: Color(inversePrimary),
-        shadow: Color(shadow),
-        scrim: Color(scrim),
-        surfaceTint: Color(primary),
-        brightness: brightness);
+      primary: Color(primary),
+      onPrimary: Color(onPrimary),
+      primaryContainer: Color(primaryContainer),
+      onPrimaryContainer: Color(onPrimaryContainer),
+      secondary: Color(secondary),
+      onSecondary: Color(onSecondary),
+      secondaryContainer: Color(secondaryContainer),
+      onSecondaryContainer: Color(onSecondaryContainer),
+      tertiary: Color(tertiary),
+      onTertiary: Color(onTertiary),
+      tertiaryContainer: Color(tertiaryContainer),
+      onTertiaryContainer: Color(onTertiaryContainer),
+      error: Color(error),
+      onError: Color(onError),
+      errorContainer: Color(errorContainer),
+      onErrorContainer: Color(onErrorContainer),
+      outline: Color(outline),
+      outlineVariant: Color(outlineVariant),
+      surface: Color(surface),
+      onSurface: txtColor,
+      surfaceContainerHighest: Color(surfaceVariant),
+      onSurfaceVariant: Color(onSurfaceVariant),
+      inverseSurface: Color(inverseSurface),
+      onInverseSurface: Color(inverseOnSurface),
+      inversePrimary: Color(inversePrimary),
+      shadow: Color(shadow),
+      scrim: Color(scrim),
+      surfaceTint: Color(primary),
+      brightness: brightness,
+    );
   }
 }
 
@@ -180,7 +171,7 @@ class AppStyle {
 
   late final shadows = _Shadows();
 
-  /// Padding and margin values
+  /// Padding dan margin
   late final insets = _Insets(scale);
 
   // Text styles
@@ -243,12 +234,13 @@ class _Text {
       heightPx *= _scale;
     }
     return style.copyWith(
-        fontSize: sizePx,
-        height: heightPx != null ? (heightPx / sizePx) : style.height,
-        letterSpacing:
-            spacingPc != null ? sizePx * spacingPc * 0.01 : style.letterSpacing,
-        fontWeight: weight,
-        color: Colors.white);
+      fontSize: sizePx,
+      height: heightPx != null ? (heightPx / sizePx) : style.height,
+      letterSpacing:
+          spacingPc != null ? sizePx * spacingPc * 0.01 : style.letterSpacing,
+      fontWeight: weight,
+      color: Colors.white,
+    );
   }
 }
 
@@ -262,12 +254,12 @@ class _Times {
 
 @immutable
 class _Corners {
-  late final double sm = 4;
-  late final double md = 8;
-  late final double lg = 32;
+  final double sm = 4;
+  final double md = 8;
+  final double lg = 32;
 }
 
-// TODO: add, @immutable when design is solidified
+// TODO: tambahkan @immutable jika desain sudah final
 class _Sizes {
   double get maxContentWidth1 => 800;
   double get maxContentWidth2 => 600;
@@ -277,37 +269,51 @@ class _Sizes {
 
 @immutable
 class _Insets {
-  _Insets(this._scale);
+  const _Insets(this._scale);
   final double _scale;
 
-  late final double xxs = 4 * _scale;
-  late final double xs = 8 * _scale;
-  late final double sm = 16 * _scale;
-  late final double md = 24 * _scale;
-  late final double lg = 32 * _scale;
-  late final double xl = 48 * _scale;
-  late final double xxl = 56 * _scale;
-  late final double offset = 80 * _scale;
+  final double xxs = 4;
+  final double xs = 8;
+  final double sm = 16;
+  final double md = 24;
+  final double lg = 32;
+  final double xl = 48;
+  final double xxl = 56;
+  final double offset = 80;
+
+  // Karena nilai insets di–scale, gunakan getter untuk mengalikan scale
+  double get scaledXxs => xxs * _scale;
+  double get scaledXs => xs * _scale;
+  double get scaledSm => sm * _scale;
+  double get scaledMd => md * _scale;
+  double get scaledLg => lg * _scale;
+  double get scaledXl => xl * _scale;
+  double get scaledXxl => xxl * _scale;
+  double get scaledOffset => offset * _scale;
 }
 
 @immutable
 class _Shadows {
-  final textSoft = [
+  final List<Shadow> textSoft = [
     Shadow(
-        color: Colors.black.withOpacity(.25),
-        offset: const Offset(0, 2),
-        blurRadius: 4),
+      // Menggunakan withAlpha() untuk mengatur opacity (0.25 * 255 ≈ 64)
+      color: Colors.black.withAlpha((0.25 * 255).round()),
+      offset: const Offset(0, 2),
+      blurRadius: 4,
+    ),
   ];
-  final text = [
+  final List<Shadow> text = [
     Shadow(
-        color: Colors.black.withOpacity(.6),
-        offset: const Offset(0, 2),
-        blurRadius: 2),
+      color: Colors.black.withAlpha((0.6 * 255).round()),
+      offset: const Offset(0, 2),
+      blurRadius: 2,
+    ),
   ];
-  final textStrong = [
+  final List<Shadow> textStrong = [
     Shadow(
-        color: Colors.black.withOpacity(.6),
-        offset: const Offset(0, 4),
-        blurRadius: 6),
+      color: Colors.black.withAlpha((0.6 * 255).round()),
+      offset: const Offset(0, 4),
+      blurRadius: 6,
+    ),
   ];
 }

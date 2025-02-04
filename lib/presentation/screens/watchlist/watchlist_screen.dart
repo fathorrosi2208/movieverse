@@ -15,9 +15,13 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      BlocProvider.of<GetWatchlistBloc>(context).add(FetchWatchlist());
-    });
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<GetWatchlistBloc>(context).add(FetchWatchlist());
   }
 
   @override

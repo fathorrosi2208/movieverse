@@ -9,6 +9,7 @@ import 'package:movieverse/presentation/bloc/tv/discover/discover_tv_bloc.dart';
 import 'package:movieverse/presentation/bloc/tv/on_the_air/on_the_air_tv_bloc.dart';
 import 'package:movieverse/presentation/bloc/tv/trending/trending_tv_bloc.dart';
 import 'package:movieverse/presentation/screens/search/search_screen.dart';
+import 'package:movieverse/presentation/widgets/carousel_with_indicator.dart';
 import 'package:movieverse/presentation/widgets/movie_card.dart';
 import 'package:movieverse/presentation/widgets/navigation_drawer.dart';
 import 'package:movieverse/presentation/widgets/tv_card.dart';
@@ -28,21 +29,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => BlocProvider.of<TrendingMoviesBloc>(context)
-      ..add(FetchTrendingMovies()));
-    Future.microtask(
-        () => BlocProvider.of<TrendingTvBloc>(context)..add(FetchTrendingTv()));
-    Future.microtask(() => BlocProvider.of<DiscoverMoviesBloc>(context)
-      ..add(FetchDiscoverMovies()));
-    Future.microtask(
-        () => BlocProvider.of<DiscoverTvBloc>(context)..add(FetchDiscoverTv()));
-    Future.microtask(() => BlocProvider.of<UpcomingMoviesBloc>(context)
-      ..add(FetchUpcomingMovies()));
-    Future.microtask(
-        () => BlocProvider.of<OnTheAirTvBloc>(context)..add(FetchOnTheAirTv()));
+
+    // Initialize tab controllers
     _tabController = TabController(vsync: this, length: 2);
     _secondTabController = TabController(length: 2, vsync: this);
     _thirdTabController = TabController(length: 2, vsync: this);
+
+    // Safely fetch data after initialization
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    // Check if widget is still mounted before accessing context
+    if (!mounted) return;
+
+    // Fetch all data
+    BlocProvider.of<TrendingMoviesBloc>(context).add(FetchTrendingMovies());
+    BlocProvider.of<TrendingTvBloc>(context).add(FetchTrendingTv());
+    BlocProvider.of<DiscoverMoviesBloc>(context).add(FetchDiscoverMovies());
+    BlocProvider.of<DiscoverTvBloc>(context).add(FetchDiscoverTv());
+    BlocProvider.of<UpcomingMoviesBloc>(context).add(FetchUpcomingMovies());
+    BlocProvider.of<OnTheAirTvBloc>(context).add(FetchOnTheAirTv());
   }
 
   @override
@@ -67,27 +74,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 pinned: true,
                 floating: true,
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    children: [
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: Image.asset(
-                          "assets/images/banner.jpg",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.amber.withOpacity(0.4),
-                        ),
-                      ),
-                      Positioned(
-                          left: 9,
-                          top: 140,
-                          child: Text(
-                              'Welcome.\nMiliion of Movied and Tv Shows to discover.\nExplore Now.',
-                              style: $styles.text.bodyLarge)),
-                    ],
+                  background:
+                      BlocBuilder<TrendingMoviesBloc, TrendingMoviesState>(
+                    builder: (context, state) {
+                      if (state is TrendingMoviesLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.amber,
+                          ),
+                        );
+                      } else if (state is TrendingMoviesHasData) {
+                        final movies = state.result;
+                        if (movies.isEmpty) {
+                          return const Center(
+                              child: Text('No movies available'));
+                        }
+                        return CarouselWithIndicator(movies: movies);
+                      } else {
+                        return const Center(
+                            child: Text('Something went wrong'));
+                      }
+                    },
                   ),
                 ),
                 expandedHeight: 277,
@@ -103,9 +110,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   builder: (context) => const SearchScreen()));
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(
+                          backgroundColor: WidgetStatePropertyAll<Color>(
                               $styles.theme.primaryColor),
-                          side: MaterialStatePropertyAll<BorderSide>(
+                          side: WidgetStatePropertyAll<BorderSide>(
                               BorderSide(color: $styles.theme.tertiaryColor)),
                         ),
                         child: Row(

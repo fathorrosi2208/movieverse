@@ -25,12 +25,14 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () {
-        BlocProvider.of<WatchlistBloc>(context)
-            .add(CheckWatchlist(widget.movie.id));
-      },
-    );
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<WatchlistBloc>(context)
+        .add(CheckWatchlist(widget.movie.id));
   }
 
   @override
@@ -133,7 +135,7 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
                             }
                           },
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll<Color>(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
                                   $styles.theme.tertiaryColor)),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

@@ -24,12 +24,13 @@ class _TvDetailContentState extends State<TvDetailContent> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () {
-        BlocProvider.of<WatchlistBloc>(context)
-            .add(CheckWatchlist(widget.tv.id));
-      },
-    );
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<WatchlistBloc>(context).add(CheckWatchlist(widget.tv.id));
   }
 
   @override
@@ -131,7 +132,7 @@ class _TvDetailContentState extends State<TvDetailContent> {
                             }
                           },
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll<Color>(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
                                   $styles.theme.tertiaryColor)),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

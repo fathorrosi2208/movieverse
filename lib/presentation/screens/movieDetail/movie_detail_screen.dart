@@ -21,12 +21,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () {
-        BlocProvider.of<MovieDetailsBloc>(context)
-            .add(FetchMovieDetails(widget.id));
-      },
-    );
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<MovieDetailsBloc>(context)
+        .add(FetchMovieDetails(widget.id));
   }
 
   @override

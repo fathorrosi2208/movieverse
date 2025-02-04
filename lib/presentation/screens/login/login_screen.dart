@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               : null,
                           style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
+                            backgroundColor: WidgetStatePropertyAll<Color>(
                               isButtonEnabled
                                   ? $styles.theme.tertiaryColor
                                   : $styles.theme.neutralColor,

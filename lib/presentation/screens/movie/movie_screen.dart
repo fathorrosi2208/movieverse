@@ -19,14 +19,16 @@ class _MovieScreenState extends State<MovieScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => BlocProvider.of<NowPlayingMoviesBloc>(context)
-      ..add(FetchNowPlayingMovies()));
-    Future.microtask(() =>
-        BlocProvider.of<PopularMoviesBloc>(context)..add(FetchPopularMovies()));
-    Future.microtask(() => BlocProvider.of<TopRatedMoviesBloc>(context)
-      ..add(FetchTopRatedMovies()));
-    Future.microtask(() => BlocProvider.of<UpcomingMoviesBloc>(context)
-      ..add(FetchUpcomingMovies()));
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    if (!mounted) return;
+
+    BlocProvider.of<NowPlayingMoviesBloc>(context).add(FetchNowPlayingMovies());
+    BlocProvider.of<PopularMoviesBloc>(context).add(FetchPopularMovies());
+    BlocProvider.of<TopRatedMoviesBloc>(context).add(FetchTopRatedMovies());
+    BlocProvider.of<UpcomingMoviesBloc>(context).add(FetchUpcomingMovies());
   }
 
   @override
